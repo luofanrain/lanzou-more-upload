@@ -1,8 +1,6 @@
 import os
 
-rootPath = r"D:/转移/15TB电子书2022年更新"
-
-def renameFile(filePath,name):
+def renameFile(filePath,name=""):
   files = os.listdir(filePath)
   for file in files:
     fileName = f"{filePath}/{file}"
@@ -18,6 +16,3 @@ def renameFile(filePath,name):
         os.rename(fileName,targetFileName)
       except Exception:
         pass
-
-if __name__ == "__main__":
-  renameFile(rootPath,"")

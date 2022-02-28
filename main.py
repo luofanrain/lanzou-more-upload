@@ -9,6 +9,7 @@ from dealWithLargeFile import dealWithFile
 from removeFile import removeFile 
 from dealWithOtherFile import dealWithOtherFile 
 from compress import dealWithCompress 
+from renameFile import renameFile 
 
 Session = requests.session()
 # cookie 和phpdisk_info 填到此处即可
@@ -21,8 +22,8 @@ Config = {
         "upload":"http://up.woozooo.com/fileup.php", # 上传接口
         "folder":"https://up.woozooo.com/doupload.php" # 文件夹接口
     },
-    "rootPath":"E:/转移/PPT(1)", # 本地目录
-    "rootFolderId":"4877118",  # 目标文件纠结啊
+    "rootPath":"D:/转移/【大型高清无损音乐】", # 本地目录
+    "rootFolderId":"4895544",  # 目标文件纠结啊
     "request":{
         "headers":{
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36",
@@ -30,7 +31,7 @@ Config = {
         }
     },
     "maxUploadSize": 100 * 1024 * 1024, # 目前最大支持100M(非会员)，会员自行更改，超过指定大小，会自动过来
-    "ext":["pdf","mobi","azw3","txt","epub","pptx","ppt","docx","doc","xlsx","xls","exe","apk","zip","rar","ttf","exe"] # 自定义支持格式，非支持格式将会打包zip后上传，
+    "ext":["pdf","mobi","azw3","txt","epub","pptx","ppt","docx","doc","xlsx","xls","exe","apk","zip","rar","ttf","exe","mp3"] # 自定义支持格式，非支持格式将会打包zip后上传，
 }
 # task 
 # 1 上传文件
@@ -149,6 +150,7 @@ if __name__ == "__main__":
     # 删除长期更新等非必要数据
     currentPath = Config["rootPath"]
     removeFile(currentPath)
+    renameFile(currentPath)
     # 图片转pdf
     dealWithOtherFile(currentPath,Config["ext"])
     # 拆分大文件

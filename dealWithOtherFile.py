@@ -34,6 +34,9 @@ def dealWithOtherFile(filePath,exts):
         ext = fileInfo[-1].lower()
         print(fileName)
         if not ext in exts:
+            fileSize = os.path.getsize(fileName)
+            if fileSize > 1024 * 1024 * 100:
+                continue
             targetFileName = f"{'.'.join(fileInfo[0:-1])}.zip"
             dealWithToZip(fileName,file,targetFileName)
             pass

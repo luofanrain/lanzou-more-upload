@@ -9,5 +9,5 @@ def removeFile(filePath):
     if os.path.isdir(fileName):
       removeFile(fileName)
     else:
-      if "长期更新" in fileName or "公众号" in fileName:
+      if "长期更新" in fileName :
         os.remove(fileName)
