@@ -5,31 +5,23 @@ import random
 import os
 import re
 import math
-from dealWithLargeFile import dealWithFile 
-from removeFile import removeFile 
-from dealWithOtherFile import dealWithOtherFile 
-from compress import dealWithCompress 
-from renameFile import renameFile 
+from controller.dealWithLargeFile import dealWithFile 
+from controller.removeFile import removeFile 
+from controller.dealWithOtherFile import dealWithOtherFile 
+from controller.compress import dealWithCompress 
+from controller.renameFile import renameFile 
+from utils.tools import getHeaders
 
 Session = requests.session()
-# cookie 和phpdisk_info 填到此处即可
-Cookie = {
-    "phpdisk_info":"",
-    "ylogin":""
-}
+headers = getHeaders()
 Config = {
     "urls": {
         "upload":"http://up.woozooo.com/fileup.php", # 上传接口
         "folder":"https://up.woozooo.com/doupload.php" # 文件夹接口
     },
-    "rootPath":"D:/转移/【大型高清无损音乐】", # 本地目录
-    "rootFolderId":"4895544",  # 目标文件纠结啊
-    "request":{
-        "headers":{
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36",
-            "Cookie":f"phpdisk_info={Cookie['phpdisk_info']};ylogin={Cookie['ylogin']}"
-        }
-    },
+    "rootPath":"E:/转移/pdf", # 本地目录
+    "rootFolderId":"-1",  # 目标文件纠结啊
+    "request":headers,
     "maxUploadSize": 100 * 1024 * 1024, # 目前最大支持100M(非会员)，会员自行更改，超过指定大小，会自动过来
     "ext":["pdf","mobi","azw3","txt","epub","pptx","ppt","docx","doc","xlsx","xls","exe","apk","zip","rar","ttf","exe","mp3"] # 自定义支持格式，非支持格式将会打包zip后上传，
 }
@@ -118,9 +110,9 @@ def createFolder(targetId,folderName):
         "folder_name": folderName,
         "folder_description": ""
     }
-    headers = Config["request"]["headers"]
-    headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
-    result = Session.post(url=Config["urls"]["folder"], data=data, headers=headers).json()
+    folderHeaders = Config["request"]["folderH"]
+    folderHeaders["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+    result = Session.post(url=Config["urls"]["folder"], data=data, headers=folderHeaders).json()
     print(f"创建文件夹成功【{folderName}，{result['zt']}")
     return result
 
@@ -149,25 +141,40 @@ def dealWithAll():
 if __name__ == "__main__":
     # 删除长期更新等非必要数据
     currentPath = Config["rootPath"]
+
+    print("删除长期更新等非必要数据")
     removeFile(currentPath)
+
+    print("重命名")
     renameFile(currentPath)
-    # 图片转pdf
+
+    # 蓝奏云不支持文件转为zip
+    print("蓝奏云不支持文件转为zip")
     dealWithOtherFile(currentPath,Config["ext"])
-    # 拆分大文件
+
+    print("拆分大文件")
     dealWithFile(currentPath)
+    print("aaaaaaaaaaaaaaaa")
+
     # 压缩pdf后再进行拆分
-    
+    print("压缩pdf后再进行拆分")
     dealWithCompress(currentPath,False)
+
     # 二次拆分，防止部分图片太大，导致超过100M
+    print("二次拆分，防止部分图片太大，导致超过100M")
     dealWithFile(currentPath)
     # 开始批量处理
+    print("开始批量处理")
     dealWithAll()
     
     # 压缩上传失败的PDF
+    print("压缩上传失败的PDF")
     dealWithCompress(currentPath,True)
-    # 拆分
+    # 压缩后再次处理
+    print("压缩后再次处理大文件")
     dealWithFile(currentPath)
-    # 二次处理
+    # 上传
+    print("上传")
     dealWithAll()
 
     print(uploadLog)

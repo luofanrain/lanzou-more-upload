@@ -1,8 +1,6 @@
 import os
-import glob
 import fitz
 import os
-from PIL import Image
 import zipfile
  
 rootPath = os.getcwd()

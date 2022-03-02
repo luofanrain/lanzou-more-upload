@@ -1,7 +1,6 @@
 
 import os
 
-
 def removeFile(filePath):
   files = os.listdir(filePath)
   for file in files:

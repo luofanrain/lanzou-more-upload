@@ -1,9 +1,7 @@
 import os
-import math
 import re
 
 from PyPDF2 import PdfFileReader, PdfFileWriter
-from pydantic import FilePath
 
 rootPath = "C:/Users/luofanrain/Desktop/test"
 def mergeFile(fileName,filePath):
