@@ -3,16 +3,18 @@ from email import contentmanager
 from fileinput import filename
 from tools import getHeaders
 import requests
+import re
 
 headers = getHeaders()
 Session = requests.session()
 Config = {
-    "rootFolderId":"4838469",
+    "rootFolderId":"4885852",
     "headers":headers,
     "urls": {
         "folder":"https://up.woozooo.com/doupload.php" # 文件夹接口
     },
-    "fileName":"三体"
+    "exclude":"", # 过滤字段，用正则，如 (的)|(解说)|(评书)
+    "fileName":"三体" # 过滤书名
 }
 def getFolders(folderId):
     data = {
@@ -37,7 +39,7 @@ def getFiles(folderId,fileName):
             "pg":index+1
         }
         result = Session.post(url=Config["urls"]["folder"], data=data, headers=Config["headers"]).json()
-        files = list(filter(lambda x:Config["fileName"] in x['name_all'],result["text"]))
+        files = list(filter(lambda x:Config["fileName"] in x['name_all'] and not re.search(Config["exclude"],x["name_all"]),result["text"]))
         if Config["fileName"]:
             files = list(map(lambda x:{"id":x["id"],"name":x["name_all"]},files))
             fileList.extend(files)
