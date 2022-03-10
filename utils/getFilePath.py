@@ -39,7 +39,7 @@ def getFiles(folderId,fileName):
             "pg":index+1
         }
         result = Session.post(url=Config["urls"]["folder"], data=data, headers=Config["headers"]).json()
-        files = list(filter(lambda x:Config["fileName"] in x['name_all'] and not re.search(Config["exclude"],x["name_all"]),result["text"]))
+        files = list(filter(lambda x:Config["fileName"] in x['name_all'] and (Config["exclude"] == "" and not re.search(Config["exclude"],x["name_all"])),result["text"]))
         if Config["fileName"]:
             files = list(map(lambda x:{"id":x["id"],"name":x["name_all"]},files))
             fileList.extend(files)
